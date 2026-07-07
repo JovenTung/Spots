@@ -8,7 +8,7 @@ import {
   ShoppingBag,
   type Icon,
 } from "@phosphor-icons/react";
-import type { PlaceCategory } from "@/types/database";
+import { PLACE_CATEGORIES, type PlaceCategory } from "@/types/database";
 
 export type CategoryMeta = {
   value: PlaceCategory;
@@ -30,10 +30,7 @@ export const CATEGORIES: CategoryMeta[] = [
   { value: "other", label: "Other", color: "#8E8B85", tint: "#EDECE8", icon: MapPin },
 ];
 
-export const CATEGORY_VALUES = CATEGORIES.map((c) => c.value) as [
-  PlaceCategory,
-  ...PlaceCategory[],
-];
+export const CATEGORY_VALUES = PLACE_CATEGORIES;
 
 export const getCategoryMeta = (value: PlaceCategory): CategoryMeta =>
   CATEGORIES.find((c) => c.value === value) ?? CATEGORIES[CATEGORIES.length - 1];

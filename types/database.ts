@@ -1,11 +1,15 @@
-export type PlaceCategory =
-  | "restaurant"
-  | "cafe"
-  | "bar"
-  | "activity"
-  | "sight"
-  | "shop"
-  | "other";
+// Server-safe (no React imports) — UI metadata lives in lib/categories.ts.
+export const PLACE_CATEGORIES = [
+  "restaurant",
+  "cafe",
+  "bar",
+  "activity",
+  "sight",
+  "shop",
+  "other",
+] as const;
+
+export type PlaceCategory = (typeof PLACE_CATEGORIES)[number];
 
 export type PlaceStatus = "want_to_go" | "visited";
 
