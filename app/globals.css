@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Soft Pop palette */
+    --background: 60 11% 96%; /* #F7F7F5 */
+    --foreground: 34 8% 16%; /* #2D2A26 charcoal */
+    --card: 0 0% 100%;
+    --card-foreground: 34 8% 16%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 34 8% 16%;
+    --primary: 6 100% 68%; /* #FF6B5B coral */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 137 14% 66%; /* #9DB5A4 sage */
+    --secondary-foreground: 34 8% 16%;
+    --muted: 48 12% 92%; /* #EDECE8 */
+    --muted-foreground: 40 4% 54%;
+    --accent: 8 100% 94%; /* #FFE3DF coral-soft */
+    --accent-foreground: 7 56% 42%;
+    --destructive: 6 79% 58%; /* #E8503F */
+    --destructive-foreground: 0 0% 100%;
+    --border: 43 13% 89%; /* #E7E5E0 */
+    --input: 43 13% 89%;
+    --ring: 6 100% 68%;
+    --radius: 1.5rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* iOS: inputs below 16px trigger zoom-on-focus */
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+@layer utilities {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
