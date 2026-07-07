@@ -98,8 +98,16 @@ create policy "places_delete_own" on public.places
 
 create policy "visits_select_own" on public.visits
   for select to authenticated using (auth.uid() = user_id);
+-- Insert also verifies the parent place is the caller's own — blocks
+-- direct-PostgREST inserts that reference someone else's place_id.
 create policy "visits_insert_own" on public.visits
-  for insert to authenticated with check (auth.uid() = user_id);
+  for insert to authenticated with check (
+    auth.uid() = user_id
+    and exists (
+      select 1 from public.places p
+      where p.id = place_id and p.user_id = auth.uid()
+    )
+  );
 create policy "visits_update_own" on public.visits
   for update to authenticated
   using (auth.uid() = user_id) with check (auth.uid() = user_id);
@@ -108,8 +116,17 @@ create policy "visits_delete_own" on public.visits
 
 create policy "photos_select_own" on public.photos
   for select to authenticated using (auth.uid() = user_id);
+-- Insert also verifies the parent visit is the caller's own and that the
+-- storage path sits inside the caller's own folder.
 create policy "photos_insert_own" on public.photos
-  for insert to authenticated with check (auth.uid() = user_id);
+  for insert to authenticated with check (
+    auth.uid() = user_id
+    and storage_path like auth.uid()::text || '/%'
+    and exists (
+      select 1 from public.visits v
+      where v.id = visit_id and v.user_id = auth.uid()
+    )
+  );
 create policy "photos_update_own" on public.photos
   for update to authenticated
   using (auth.uid() = user_id) with check (auth.uid() = user_id);

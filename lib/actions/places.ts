@@ -95,16 +95,11 @@ export const deletePlace = async (input: {
   if (!parsed.success) return { ok: false, error: "Invalid place" };
 
   // FK cascades remove visit/photo rows but not storage objects, so collect
-  // this place's photo paths first and delete them explicitly.
+  // this place's photo paths before the rows disappear.
   const { data: photoRows } = await supabase
     .from("photos")
     .select("storage_path, visits!inner(place_id)")
     .eq("visits.place_id", parsed.data.id);
-
-  const paths = (photoRows ?? []).map((row) => row.storage_path);
-  if (paths.length > 0) {
-    await supabase.storage.from("photos").remove(paths);
-  }
 
   const { error } = await supabase
     .from("places")
@@ -113,5 +108,13 @@ export const deletePlace = async (input: {
     .eq("user_id", user.id);
 
   if (error) return { ok: false, error: "Couldn't delete this spot" };
+
+  // Rows first, then objects — a failed removal leaves invisible orphans
+  // rather than rows pointing at deleted objects.
+  const paths = (photoRows ?? []).map((row) => row.storage_path);
+  if (paths.length > 0) {
+    await supabase.storage.from("photos").remove(paths);
+  }
+
   return { ok: true, data: undefined };
 };

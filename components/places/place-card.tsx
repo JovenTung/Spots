@@ -34,6 +34,9 @@ export const PlaceCard = ({ place, photoUrl }: PlaceCardProps) => {
             fill
             sizes="64px"
             className="object-cover"
+            // Instagram CDN thumbnails bypass /_next/image (already optimized;
+            // keeps the optimizer locked to our own Supabase host).
+            unoptimized={thumbnail === place.source_thumbnail_url}
           />
         ) : (
           <category.icon size={26} style={{ color: category.color }} />

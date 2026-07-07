@@ -116,7 +116,8 @@ export const DELETE = async (request: Request) => {
     return NextResponse.json({ error: "Photo not found" }, { status: 404 });
   }
 
-  await supabase.storage.from("photos").remove([photo.storage_path]);
+  // Row first, then object — a failed object removal leaves an invisible
+  // orphan, while the reverse would leave a row pointing at nothing.
   const { error } = await supabase
     .from("photos")
     .delete()
@@ -125,6 +126,7 @@ export const DELETE = async (request: Request) => {
   if (error) {
     return NextResponse.json({ error: "Delete failed" }, { status: 500 });
   }
+  await supabase.storage.from("photos").remove([photo.storage_path]);
 
   return NextResponse.json({ ok: true });
 };

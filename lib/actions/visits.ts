@@ -61,16 +61,11 @@ export const deleteVisit = async (input: {
   const parsed = visitIdSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: "Invalid visit" };
 
-  // Storage objects don't cascade — remove them explicitly first.
+  // Storage objects don't cascade — collect paths before the rows go.
   const { data: photoRows } = await supabase
     .from("photos")
     .select("storage_path")
     .eq("visit_id", parsed.data.id);
-
-  const paths = (photoRows ?? []).map((row) => row.storage_path);
-  if (paths.length > 0) {
-    await supabase.storage.from("photos").remove(paths);
-  }
 
   const { error } = await supabase
     .from("visits")
@@ -79,5 +74,13 @@ export const deleteVisit = async (input: {
     .eq("user_id", user.id);
 
   if (error) return { ok: false, error: "Couldn't delete this visit" };
+
+  // Rows first, then objects — a failed removal leaves invisible orphans
+  // rather than rows pointing at deleted objects.
+  const paths = (photoRows ?? []).map((row) => row.storage_path);
+  if (paths.length > 0) {
+    await supabase.storage.from("photos").remove(paths);
+  }
+
   return { ok: true, data: undefined };
 };

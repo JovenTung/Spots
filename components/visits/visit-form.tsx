@@ -177,7 +177,7 @@ export const VisitForm = ({ placeId }: { placeId: string }) => {
       <Button
         type="submit"
         disabled={mutation.isPending}
-        className="mt-1 h-13 min-h-12 rounded-full font-display text-base"
+        className="mt-1 h-12 rounded-full font-display text-base"
       >
         {mutation.isPending ? (progress ?? "Saving…") : "Save visit"}
       </Button>

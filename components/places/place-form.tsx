@@ -174,7 +174,7 @@ export const PlaceForm = ({ place, prefill }: PlaceFormProps) => {
       <Button
         type="submit"
         disabled={mutation.isPending}
-        className="mt-2 h-13 min-h-12 rounded-full font-display text-base"
+        className="mt-2 h-12 rounded-full font-display text-base"
       >
         {mutation.isPending
           ? "Saving…"

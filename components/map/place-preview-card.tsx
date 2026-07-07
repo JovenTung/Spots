@@ -49,6 +49,7 @@ const PreviewContent = ({ place }: { place: PlaceListItem }) => {
             fill
             sizes="56px"
             className="object-cover"
+            unoptimized
           />
         ) : (
           <category.icon size={24} style={{ color: category.color }} />

@@ -5,7 +5,10 @@ import { createClient } from "@/lib/supabase/server";
 // Handles Supabase email confirmation links: both the PKCE `code` flow and
 // the `token_hash` OTP flow, depending on project email template settings.
 export const GET = async (request: Request) => {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams, origin: requestOrigin } = new URL(request.url);
+  // Prefer a configured site URL over the request Host so a spoofed Host
+  // header can't steer the redirect (fixed path either way).
+  const origin = process.env.NEXT_PUBLIC_SITE_URL ?? requestOrigin;
   const code = searchParams.get("code");
   const tokenHash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;

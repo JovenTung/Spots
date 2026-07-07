@@ -181,6 +181,7 @@ export default function PlaceDetailPage({
               sizes="(max-width: 448px) 100vw, 448px"
               className="object-cover"
               priority
+              unoptimized={heroUrl === place.source_thumbnail_url}
             />
           ) : (
             <div className="flex h-full items-center justify-center">
@@ -274,7 +275,7 @@ export default function PlaceDetailPage({
           <Button
             onClick={() => markVisitedMutation.mutate()}
             disabled={markVisitedMutation.isPending}
-            className="h-13 min-h-12 rounded-full font-display text-base"
+            className="h-12 rounded-full font-display text-base"
           >
             <CheckCircle size={20} weight="fill" />
             {markVisitedMutation.isPending ? "One sec…" : "I've been here!"}
@@ -282,7 +283,7 @@ export default function PlaceDetailPage({
         ) : (
           <Button
             asChild
-            className="h-13 min-h-12 rounded-full font-display text-base"
+            className="h-12 rounded-full font-display text-base"
           >
             <Link href={`/places/${place.id}/add-visit`}>
               <Plus size={20} weight="bold" />
