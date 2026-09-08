@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { fetchViaOEmbed, fetchViaOgTags } from "@/lib/instagram";
-import { extractPlaceFromCaption } from "@/lib/anthropic";
+import {
+  extractPlaceFromCaption,
+  isCaptionExtractionConfigured,
+} from "@/lib/anthropic";
 import {
   canonicalInstagramUrl,
   importRequestSchema,
@@ -78,6 +81,16 @@ export const POST = async (request: Request) => {
     caption = fetched.caption;
     thumbnailUrl = fetched.thumbnailUrl;
     source = viaOEmbed ? "oembed" : "og";
+  }
+
+  if (!isCaptionExtractionConfigured()) {
+    return NextResponse.json(
+      {
+        error:
+          "Instagram import isn't set up on this deployment — add the spot manually instead.",
+      },
+      { status: 503 },
+    );
   }
 
   const extraction = await extractPlaceFromCaption(caption);

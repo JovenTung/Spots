@@ -15,12 +15,19 @@ If several places are mentioned, pick the main one the post is about.
 Caption:
 `;
 
+/** Caption extraction is optional: the app is fully usable without it, you
+ *  just add places by hand instead of importing them. */
+export const isCaptionExtractionConfigured = () =>
+  Boolean(process.env.ANTHROPIC_API_KEY);
+
 export const extractPlaceFromCaption = async (
   caption: string,
 ): Promise<Extraction | null> => {
-  const client = new Anthropic();
+  if (!isCaptionExtractionConfigured()) return null;
 
   try {
+    // Constructed inside the try: the SDK throws here when the key is absent.
+    const client = new Anthropic();
     const response = await client.messages.parse({
       model: "claude-haiku-4-5",
       max_tokens: 1024,
