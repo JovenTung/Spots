@@ -1,26 +1,13 @@
 "use client";
 
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-const containerVariants: Variants = {
-  hidden: {},
-  show: {
-    transition: { staggerChildren: 0.06 },
-  },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 24, scale: 0.97 },
-  show: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { type: "spring", stiffness: 340, damping: 28 },
-  },
-};
-
-/** Staggered spring entrance for card lists (places, visits). */
+/**
+ * List wrapper. The cross-fade fires when the caller changes `key` (a filter
+ * or tab change), so the motion reports that the filter applied — it is not a
+ * page-load entrance.
+ */
 export const AnimatedList = ({
   children,
   className,
@@ -32,10 +19,10 @@ export const AnimatedList = ({
 
   return (
     <motion.ul
-      className={cn("flex flex-col gap-3", className)}
-      variants={reduceMotion ? undefined : containerVariants}
-      initial={reduceMotion ? false : "hidden"}
-      animate="show"
+      className={cn("flex flex-col", className)}
+      initial={reduceMotion ? false : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.ul>
@@ -56,8 +43,7 @@ export const AnimatedItem = ({
   return (
     <motion.li
       className={cn("list-none", className)}
-      variants={reduceMotion ? undefined : itemVariants}
-      whileTap={reduceMotion || !onTap ? undefined : { scale: 0.97 }}
+      whileTap={reduceMotion || !onTap ? undefined : { scale: 0.98 }}
       onTap={onTap}
     >
       {children}

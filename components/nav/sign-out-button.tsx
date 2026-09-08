@@ -23,7 +23,7 @@ export const SignOutButton = () => {
       variant="outline"
       onClick={handleSignOut}
       disabled={isSigningOut}
-      className="h-12 rounded-full font-display"
+      size="lg" className="rounded-full"
     >
       <SignOut size={18} />
       {isSigningOut ? "Signing out…" : "Sign out"}

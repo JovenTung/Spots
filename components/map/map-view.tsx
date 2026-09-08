@@ -13,10 +13,10 @@ type MapViewProps = {
 };
 
 const PIN_SVG = (color: string, filled: boolean) => `
-  <svg width="38" height="38" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="34" height="34" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M128 16a88 88 0 0 0-88 88c0 63 75 125 81.6 130.3a10 10 0 0 0 12.8 0C141 229 216 167 216 104a88 88 0 0 0-88-88Z"
-      fill="${filled ? color : "#FFFFFF"}" stroke="${color}" stroke-width="14"/>
-    <circle cx="128" cy="104" r="36" fill="${filled ? "#FFFFFF" : color}"/>
+      fill="${filled ? color : "oklch(var(--card))"}" stroke="${color}" stroke-width="14"/>
+    <circle cx="128" cy="104" r="36" fill="${filled ? "oklch(var(--card))" : color}"/>
   </svg>`;
 
 /** Full interactive map. Dynamically imported with ssr:false — never bundle
@@ -36,9 +36,14 @@ export default function MapView({ places, selectedId, onSelect }: MapViewProps) 
     if (!containerRef.current || mapRef.current) return;
 
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "";
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)",
+    ).matches;
     const map = new mapboxgl.Map({
       container: containerRef.current,
-      style: "mapbox://styles/mapbox/light-v11",
+      style: prefersDark
+        ? "mapbox://styles/mapbox/dark-v11"
+        : "mapbox://styles/mapbox/light-v11",
       center: [0, 20],
       zoom: 1.4,
     });
@@ -79,7 +84,7 @@ export default function MapView({ places, selectedId, onSelect }: MapViewProps) 
         "background:none;border:none;padding:4px;cursor:pointer;line-height:0;";
       el.innerHTML =
         `<span class="pin" style="display:inline-block;line-height:0;` +
-        `filter:drop-shadow(0 3px 4px rgba(45,42,38,0.3));` +
+        `filter:drop-shadow(0 2px 3px oklch(0 0 0 / 0.28));` +
         `transition:transform 0.15s ease;transform-origin:bottom center;">` +
         PIN_SVG(category.color, place.status === "visited") +
         `</span>`;
@@ -107,7 +112,7 @@ export default function MapView({ places, selectedId, onSelect }: MapViewProps) 
     markersRef.current.forEach((marker, id) => {
       const pin = marker.getElement().querySelector<HTMLElement>(".pin");
       if (pin) {
-        pin.style.transform = id === selectedId ? "scale(1.2)" : "scale(1)";
+        pin.style.transform = id === selectedId ? "scale(1.15)" : "scale(1)";
       }
       marker.getElement().style.zIndex = id === selectedId ? "10" : "1";
     });

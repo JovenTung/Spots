@@ -2,27 +2,27 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
-import { ListHeart, MapTrifold, Plus, User } from "@phosphor-icons/react";
+import { motion, useReducedMotion } from "framer-motion";
+import { ListBullets, MapTrifold, Plus, User } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
-  { href: "/places", label: "Spots", icon: ListHeart },
+  { href: "/places", label: "Spots", icon: ListBullets },
   { href: "/map", label: "Map", icon: MapTrifold },
   { href: "/profile", label: "Profile", icon: User },
 ] as const;
 
 export const BottomNav = () => {
   const pathname = usePathname();
+  const reduceMotion = useReducedMotion();
 
-  // Hide the shell nav on full-screen flows (forms have their own headers).
   const isActive = (href: string) =>
     href === "/places"
       ? pathname === "/places" || pathname.startsWith("/places/")
       : pathname.startsWith(href);
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card/90 pb-safe backdrop-blur-lg">
+    <nav className="fixed inset-x-0 bottom-0 z-nav border-t border-border bg-card/85 pb-safe backdrop-blur-xl">
       <div className="mx-auto flex h-16 w-full max-w-md items-center justify-around px-2">
         {NAV_ITEMS.slice(0, 2).map((item) => (
           <NavLink key={item.href} {...item} active={isActive(item.href)} />
@@ -31,13 +31,13 @@ export const BottomNav = () => {
         <Link
           href="/places/new"
           aria-label="Add a spot"
-          className="relative -mt-6 flex h-14 w-14 items-center justify-center"
+          className="flex h-12 w-12 items-center justify-center"
         >
           <motion.span
-            whileTap={{ scale: 0.88 }}
-            className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/35"
+            whileTap={reduceMotion ? undefined : { scale: 0.92 }}
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-foreground"
           >
-            <Plus size={26} weight="bold" />
+            <Plus size={22} weight="bold" />
           </motion.span>
         </Link>
 
@@ -62,25 +62,13 @@ const NavLink = ({
 }) => (
   <Link
     href={href}
+    aria-current={active ? "page" : undefined}
     className={cn(
-      "relative flex min-w-16 flex-col items-center gap-0.5 rounded-2xl px-3 py-1.5 transition-colors",
-      active ? "text-primary" : "text-muted-foreground",
+      "flex min-h-11 min-w-16 flex-col items-center justify-center gap-1 rounded-md transition-colors duration-150",
+      active ? "text-foreground" : "text-muted-foreground",
     )}
   >
-    {active && (
-      <motion.span
-        layoutId="nav-active"
-        className="absolute inset-0 rounded-2xl bg-accent"
-        transition={{ type: "spring", stiffness: 400, damping: 32 }}
-      />
-    )}
-    <Icon
-      size={24}
-      weight={active ? "fill" : "regular"}
-      className="relative z-10"
-    />
-    <span className="relative z-10 font-display text-[11px] font-medium">
-      {label}
-    </span>
+    <Icon size={22} weight={active ? "fill" : "regular"} />
+    <span className="text-micro font-medium">{label}</span>
   </Link>
 );

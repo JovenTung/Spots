@@ -26,7 +26,7 @@ export const PhotoGallery = ({ photos }: { photos: PhotoRow[] }) => {
               key={photo.id}
               type="button"
               onClick={() => setOpenPath(photo.storage_path)}
-              className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl bg-muted"
+              className="relative h-24 w-24 shrink-0 overflow-hidden rounded-md bg-muted"
             >
               {url && (
                 <Image
@@ -46,7 +46,7 @@ export const PhotoGallery = ({ photos }: { photos: PhotoRow[] }) => {
         open={openPath !== null}
         onOpenChange={(open) => !open && setOpenPath(null)}
       >
-        <DialogContent className="max-w-lg overflow-hidden rounded-3xl border-none bg-black p-0">
+        <DialogContent className="max-w-lg overflow-hidden rounded-lg border-none bg-black p-0">
           <DialogTitle className="sr-only">
             {openPhoto?.caption ?? "Photo"}
           </DialogTitle>

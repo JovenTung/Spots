@@ -83,7 +83,7 @@ export const AddressAutocomplete = ({
           onChange={(e) => handleInputChange(e.target.value)}
           placeholder={placeholder}
           autoComplete="off"
-          className="h-12 rounded-2xl pr-10"
+          className="h-12 pr-10"
         />
         <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
           {isLoading ? (
@@ -101,7 +101,7 @@ export const AddressAutocomplete = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.15 }}
-            className="absolute z-30 mt-2 w-full overflow-hidden rounded-2xl border border-border bg-popover shadow-lg"
+            className="absolute z-30 mt-2 w-full overflow-hidden rounded-md border border-border bg-popover shadow-md"
           >
             {suggestions.map((suggestion) => (
               <li key={suggestion.mapboxId}>

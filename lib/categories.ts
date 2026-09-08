@@ -13,21 +13,35 @@ import { PLACE_CATEGORIES, type PlaceCategory } from "@/types/database";
 export type CategoryMeta = {
   value: PlaceCategory;
   label: string;
-  /** Hex color driving both list chips and map pins. */
+  /** Glyph + map-pin color. A CSS var so it re-resolves in dark mode —
+   *  inline SVG in the document resolves custom properties too. */
   color: string;
-  /** Soft tint used for chip backgrounds. */
+  /** Placeholder-surface tint behind the glyph. */
   tint: string;
   icon: Icon;
 };
 
+const meta = (
+  value: PlaceCategory,
+  label: string,
+  key: string,
+  icon: Icon,
+): CategoryMeta => ({
+  value,
+  label,
+  color: `oklch(var(--cat-${key}))`,
+  tint: `oklch(var(--cat-${key}-tint))`,
+  icon,
+});
+
 export const CATEGORIES: CategoryMeta[] = [
-  { value: "restaurant", label: "Restaurant", color: "#FF6B5B", tint: "#FFE3DF", icon: ForkKnife },
-  { value: "cafe", label: "Cafe", color: "#E8A13C", tint: "#FBEDD7", icon: Coffee },
-  { value: "bar", label: "Bar", color: "#9C7BD4", tint: "#EDE6F9", icon: Martini },
-  { value: "activity", label: "Activity", color: "#5BB8A6", tint: "#DFF2EE", icon: Confetti },
-  { value: "sight", label: "Sight", color: "#5B9BD4", tint: "#E0EDF9", icon: Binoculars },
-  { value: "shop", label: "Shop", color: "#E87BA4", tint: "#FBE4ED", icon: ShoppingBag },
-  { value: "other", label: "Other", color: "#8E8B85", tint: "#EDECE8", icon: MapPin },
+  meta("restaurant", "Restaurant", "restaurant", ForkKnife),
+  meta("cafe", "Cafe", "cafe", Coffee),
+  meta("bar", "Bar", "bar", Martini),
+  meta("activity", "Activity", "activity", Confetti),
+  meta("sight", "Sight", "sight", Binoculars),
+  meta("shop", "Shop", "shop", ShoppingBag),
+  meta("other", "Other", "other", MapPin),
 ];
 
 export const CATEGORY_VALUES = PLACE_CATEGORIES;

@@ -90,7 +90,7 @@ export const PlaceForm = ({ place, prefill }: PlaceFormProps) => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Nakiryu Ramen"
-          className="h-12 rounded-2xl"
+          className="h-12"
           maxLength={200}
         />
       </div>
@@ -104,30 +104,22 @@ export const PlaceForm = ({ place, prefill }: PlaceFormProps) => {
               <motion.button
                 key={c.value}
                 type="button"
-                whileTap={{ scale: 0.92 }}
+                whileTap={{ scale: 0.96 }}
                 onClick={() => setCategory(c.value)}
+                aria-pressed={isActive}
                 className={cn(
-                  "flex flex-col items-center gap-1.5 rounded-2xl border-2 px-1 py-3 transition-colors",
-                  isActive ? "border-transparent" : "border-transparent bg-muted",
-                )}
-                style={
+                  "flex min-h-[4.25rem] flex-col items-center justify-center gap-1.5 rounded-md border px-1 py-3 transition-colors duration-150",
                   isActive
-                    ? { backgroundColor: c.tint, borderColor: c.color }
-                    : undefined
-                }
+                    ? "border-foreground bg-muted"
+                    : "border-border active:bg-muted",
+                )}
               >
-                <c.icon
-                  size={22}
-                  weight={isActive ? "fill" : "regular"}
-                  style={{ color: isActive ? c.color : undefined }}
-                  className={isActive ? undefined : "text-muted-foreground"}
-                />
+                <c.icon size={20} style={{ color: c.color }} />
                 <span
                   className={cn(
-                    "font-display text-[11px] font-medium",
-                    isActive ? "" : "text-muted-foreground",
+                    "text-micro font-medium",
+                    isActive ? "text-foreground" : "text-muted-foreground",
                   )}
-                  style={isActive ? { color: c.color } : undefined}
                 >
                   {c.label}
                 </span>
@@ -144,7 +136,7 @@ export const PlaceForm = ({ place, prefill }: PlaceFormProps) => {
           value={status}
           onChange={setStatus}
           items={[
-            { value: "want_to_go", label: "Want to Go" },
+            { value: "want_to_go", label: "Want to go" },
             { value: "visited", label: "Visited" },
           ]}
         />
@@ -166,7 +158,7 @@ export const PlaceForm = ({ place, prefill }: PlaceFormProps) => {
         />
         {coords && (
           <p className="text-xs text-muted-foreground">
-            📍 Pinned — this spot will show on your map
+            Pinned. This spot will show on your map.
           </p>
         )}
       </div>
@@ -174,7 +166,7 @@ export const PlaceForm = ({ place, prefill }: PlaceFormProps) => {
       <Button
         type="submit"
         disabled={mutation.isPending}
-        className="mt-2 h-12 rounded-full font-display text-base"
+        size="lg" className="mt-2 rounded-full"
       >
         {mutation.isPending
           ? "Saving…"

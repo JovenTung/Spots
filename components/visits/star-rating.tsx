@@ -20,7 +20,7 @@ export const StarRating = ({
   className,
 }: StarRatingProps) => {
   const reduceMotion = useReducedMotion();
-  const starSize = size ?? (onChange ? 36 : 16);
+  const starSize = size ?? (onChange ? 32 : 14);
 
   return (
     <div
@@ -34,7 +34,7 @@ export const StarRating = ({
           <Star
             size={starSize}
             weight={isFilled ? "fill" : "regular"}
-            className={isFilled ? "text-amber-400" : "text-muted-foreground/40"}
+            className={isFilled ? "text-star" : "text-muted-foreground/35"}
           />
         );
 
@@ -50,8 +50,8 @@ export const StarRating = ({
             aria-checked={star === value}
             aria-label={`${star} star${star > 1 ? "s" : ""}`}
             onClick={() => onChange(star)}
-            whileTap={reduceMotion ? undefined : { scale: 1.35 }}
-            transition={{ type: "spring", stiffness: 500, damping: 18 }}
+            whileTap={reduceMotion ? undefined : { scale: 1.2 }}
+            transition={{ duration: 0.15, ease: [0.22, 1, 0.36, 1] }}
             className="flex min-h-11 min-w-9 items-center justify-center"
           >
             {StarEl}

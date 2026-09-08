@@ -20,9 +20,9 @@ export default function EditPlacePage({
       <div className="px-5">
         {isPending ? (
           <div className="flex flex-col gap-4">
-            <Skeleton className="h-12 w-full rounded-2xl" />
-            <Skeleton className="h-40 w-full rounded-2xl" />
-            <Skeleton className="h-12 w-full rounded-2xl" />
+            <Skeleton className="h-12 w-full rounded-md" />
+            <Skeleton className="h-40 w-full rounded-md" />
+            <Skeleton className="h-12 w-full rounded-md" />
           </div>
         ) : place ? (
           <PlaceForm place={place} />

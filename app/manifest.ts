@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Track places you want to go and places you've been.",
     start_url: "/places",
     display: "standalone",
-    background_color: "#F7F7F5",
-    theme_color: "#F7F7F5",
+    background_color: "#f8f6f6",
+    theme_color: "#f8f6f6",
     icons: [
       {
         src: "/icon",

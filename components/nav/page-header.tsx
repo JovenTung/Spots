@@ -10,14 +10,14 @@ type PageHeaderProps = {
   className?: string;
 };
 
-/** Sub-page header: back button + display title + optional action slot. */
+/** Sub-page header: back button + title + optional action slot. */
 export const PageHeader = ({ title, actions, className }: PageHeaderProps) => {
   const router = useRouter();
 
   return (
     <header
       className={cn(
-        "sticky top-0 z-30 flex min-h-14 items-center gap-2 bg-background/90 px-3 pt-safe backdrop-blur-lg",
+        "sticky top-0 z-header flex min-h-14 items-center gap-1 border-b border-border bg-background/85 px-2 pt-safe backdrop-blur-xl",
         className,
       )}
     >
@@ -25,13 +25,11 @@ export const PageHeader = ({ title, actions, className }: PageHeaderProps) => {
         type="button"
         onClick={() => router.back()}
         aria-label="Go back"
-        className="flex h-11 w-11 items-center justify-center rounded-full transition-colors active:bg-muted"
+        className="flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-150 active:bg-muted"
       >
-        <CaretLeft size={22} />
+        <CaretLeft size={20} />
       </button>
-      <h1 className="min-w-0 flex-1 truncate font-display text-lg font-semibold">
-        {title}
-      </h1>
+      <h1 className="min-w-0 flex-1 truncate text-lg font-semibold">{title}</h1>
       {actions}
     </header>
   );

@@ -69,7 +69,7 @@ export const PhotoUploader = ({ photos, onChange }: PhotoUploaderProps) => {
                 fill
                 sizes="96px"
                 unoptimized
-                className="rounded-2xl object-cover"
+                className="rounded-md object-cover"
               />
               <button
                 type="button"
@@ -87,10 +87,10 @@ export const PhotoUploader = ({ photos, onChange }: PhotoUploaderProps) => {
           type="button"
           whileTap={{ scale: 0.92 }}
           onClick={() => inputRef.current?.click()}
-          className="flex h-24 w-24 flex-col items-center justify-center gap-1 rounded-2xl border-2 border-dashed border-border bg-muted/50 text-muted-foreground"
+          className="flex h-24 w-24 flex-col items-center justify-center gap-1 rounded-md border-2 border-dashed border-border bg-muted/50 text-muted-foreground"
         >
           <Camera size={24} />
-          <span className="font-display text-[11px] font-medium">Add</span>
+          <span className="text-micro font-medium">Add</span>
         </motion.button>
       </div>
 

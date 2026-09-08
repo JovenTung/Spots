@@ -85,9 +85,9 @@ export const InstagramImportForm = ({
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex items-start gap-3 rounded-lg bg-card p-4 shadow-sm">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-[#FEDA75] via-[#D62976] to-[#962FBF]">
-          <InstagramLogo size={22} className="text-white" />
+      <div className="flex items-start gap-3 rounded-lg border border-border p-4">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-muted">
+          <InstagramLogo size={18} className="text-muted-foreground" />
         </span>
         <p className="text-sm text-muted-foreground">
           Paste a link to a public post and we&apos;ll pull out the place for
@@ -111,7 +111,7 @@ export const InstagramImportForm = ({
                 setUrl(e.target.value);
                 setNeedsCaption(false);
               }}
-              className="h-12 rounded-2xl pl-10"
+              className="h-12 pl-10"
             />
             <LinkSimple
               size={18}
@@ -123,7 +123,7 @@ export const InstagramImportForm = ({
           <Button
             type="submit"
             disabled={mutation.isPending}
-            className="h-12 rounded-full font-display text-base"
+            size="lg" className="rounded-full"
           >
             <Sparkle size={18} weight="fill" />
             {mutation.isPending ? "Reading the post…" : "Import place"}
@@ -140,7 +140,7 @@ export const InstagramImportForm = ({
             onSubmit={handleSubmitCaption}
             className="flex flex-col gap-3"
           >
-            <div className="rounded-2xl bg-accent px-4 py-3 text-sm text-accent-foreground">
+            <div className="rounded-md bg-accent px-4 py-3 text-sm text-accent-foreground">
               Instagram wouldn&apos;t share that post with us. Copy the caption
               from the app and paste it here instead.
             </div>
@@ -153,13 +153,13 @@ export const InstagramImportForm = ({
                 placeholder="Best ramen in Tokyo 🍜 @nakiryu…"
                 rows={5}
                 maxLength={5000}
-                className="rounded-2xl"
+                className="rounded-md"
               />
             </div>
             <Button
               type="submit"
               disabled={mutation.isPending}
-              className="h-12 rounded-full font-display text-base"
+              size="lg" className="rounded-full"
             >
               <Sparkle size={18} weight="fill" />
               {mutation.isPending ? "Reading the caption…" : "Find the place"}

@@ -49,7 +49,7 @@ export default function MapPage() {
 
       {/* Floating filters */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 flex flex-col gap-2 px-4 pt-safe">
-        <div className="pointer-events-auto mx-auto mt-3 w-full max-w-md rounded-full bg-card/95 p-1 shadow-lg backdrop-blur">
+        <div className="pointer-events-auto mx-auto mt-3 w-full max-w-md rounded-full bg-card/95 p-1 shadow-md backdrop-blur">
           <AnimatedTabs<MapStatusFilter>
             layoutId="map-status"
             value={mapStatusFilter}

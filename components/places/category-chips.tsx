@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { CATEGORIES } from "@/lib/categories";
 import { cn } from "@/lib/utils";
 import type { PlaceCategory } from "@/types/database";
@@ -10,24 +10,25 @@ type CategoryChipsProps = {
   onChange: (value: PlaceCategory | null) => void;
 };
 
-/** Horizontally scrollable category filter chips. */
+/** Category filter. Chips are neutral: colour here would be decoration, and
+ *  seven saturated pills is what made the old list feel like a game board. */
 export const CategoryChips = ({ value, onChange }: CategoryChipsProps) => (
-  <div className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 scrollbar-none">
+  <div
+    role="group"
+    aria-label="Filter by category"
+    className="-mx-5 flex gap-2 overflow-x-auto px-5 py-0.5 scrollbar-none"
+  >
     <Chip
       label="All"
       active={value === null}
-      activeColor="#2D2A26"
-      tint="#EDECE8"
       onClick={() => onChange(null)}
     />
     {CATEGORIES.map((category) => (
       <Chip
         key={category.value}
         label={category.label}
-        icon={<category.icon size={15} weight={value === category.value ? "fill" : "regular"} />}
+        icon={<category.icon size={14} />}
         active={value === category.value}
-        activeColor={category.color}
-        tint={category.tint}
         onClick={() =>
           onChange(value === category.value ? null : category.value)
         }
@@ -40,28 +41,30 @@ const Chip = ({
   label,
   icon,
   active,
-  activeColor,
-  tint,
   onClick,
 }: {
   label: string;
   icon?: React.ReactNode;
   active: boolean;
-  activeColor: string;
-  tint: string;
   onClick: () => void;
-}) => (
-  <motion.button
-    type="button"
-    whileTap={{ scale: 0.92 }}
-    onClick={onClick}
-    className={cn(
-      "flex min-h-9 shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 font-display text-sm font-medium transition-colors",
-      active ? "text-white" : "text-foreground/70",
-    )}
-    style={{ backgroundColor: active ? activeColor : tint }}
-  >
-    {icon}
-    {label}
-  </motion.button>
-);
+}) => {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <motion.button
+      type="button"
+      aria-pressed={active}
+      whileTap={reduceMotion ? undefined : { scale: 0.96 }}
+      onClick={onClick}
+      className={cn(
+        "flex min-h-9 shrink-0 items-center gap-1.5 rounded-full border px-3.5 text-sm font-medium transition-colors duration-150",
+        active
+          ? "border-foreground bg-foreground text-background"
+          : "border-border bg-card text-muted-foreground active:bg-muted",
+      )}
+    >
+      {icon}
+      {label}
+    </motion.button>
+  );
+};

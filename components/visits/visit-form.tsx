@@ -117,7 +117,7 @@ export const VisitForm = ({ placeId }: { placeId: string }) => {
           value={visitedDate}
           max={todayIso()}
           onChange={(e) => setVisitedDate(e.target.value)}
-          className="h-12 rounded-2xl"
+          className="h-12"
         />
       </div>
 
@@ -135,12 +135,12 @@ export const VisitForm = ({ placeId }: { placeId: string }) => {
           placeholder="The vibe, the wait, who you went with…"
           rows={3}
           maxLength={2000}
-          className="rounded-2xl"
+          className="rounded-md"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="good-things" className="text-[#2C6B5E]">
+        <Label htmlFor="good-things">
           What was good?
         </Label>
         <Textarea
@@ -150,12 +150,12 @@ export const VisitForm = ({ placeId }: { placeId: string }) => {
           placeholder="Order this again…"
           rows={2}
           maxLength={2000}
-          className="rounded-2xl border-[#9DB5A4]/60 focus-visible:ring-[#5BB8A6]"
+          className="rounded-md"
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="bad-things" className="text-accent-foreground">
+        <Label htmlFor="bad-things">
           What was bad?
         </Label>
         <Textarea
@@ -165,7 +165,7 @@ export const VisitForm = ({ placeId }: { placeId: string }) => {
           placeholder="Skip this next time…"
           rows={2}
           maxLength={2000}
-          className="rounded-2xl border-accent-foreground/30 focus-visible:ring-destructive"
+          className="rounded-md"
         />
       </div>
 
@@ -177,7 +177,7 @@ export const VisitForm = ({ placeId }: { placeId: string }) => {
       <Button
         type="submit"
         disabled={mutation.isPending}
-        className="mt-1 h-12 rounded-full font-display text-base"
+        size="lg" className="mt-1 rounded-full"
       >
         {mutation.isPending ? (progress ?? "Saving…") : "Save visit"}
       </Button>

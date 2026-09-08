@@ -5,7 +5,6 @@ import Link from "next/link";
 import { CaretRight, Star } from "@phosphor-icons/react";
 import { getCategoryMeta } from "@/lib/categories";
 import { averageRating, type PlaceListItem } from "@/lib/queries/places";
-import { cn } from "@/lib/utils";
 
 type PlaceCardProps = {
   place: PlaceListItem;
@@ -13,6 +12,8 @@ type PlaceCardProps = {
   photoUrl?: string;
 };
 
+/** A row in the places list. Hairline-separated, not a floating card —
+ *  a list of places should read as a list. */
 export const PlaceCard = ({ place, photoUrl }: PlaceCardProps) => {
   const category = getCategoryMeta(place.category);
   const rating = averageRating(place.visits);
@@ -21,53 +22,48 @@ export const PlaceCard = ({ place, photoUrl }: PlaceCardProps) => {
   return (
     <Link
       href={`/places/${place.id}`}
-      className="flex items-center gap-3.5 rounded-lg bg-card p-3.5 shadow-sm transition-shadow active:shadow-none"
+      className="group flex items-center gap-3.5 rounded-lg px-2 py-3 transition-colors duration-150 active:bg-muted"
     >
       <div
-        className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl"
+        className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-md"
         style={{ backgroundColor: category.tint }}
       >
         {thumbnail ? (
           <Image
             src={thumbnail}
-            alt={place.name}
+            alt=""
             fill
-            sizes="64px"
+            sizes="56px"
             className="object-cover"
             // Instagram CDN thumbnails bypass /_next/image (already optimized;
             // keeps the optimizer locked to our own Supabase host).
             unoptimized={thumbnail === place.source_thumbnail_url}
           />
         ) : (
-          <category.icon size={26} style={{ color: category.color }} />
+          <category.icon size={22} style={{ color: category.color }} />
         )}
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className="truncate font-display text-base font-medium">
-          {place.name}
-        </p>
+        <p className="truncate font-medium">{place.name}</p>
         {place.address && (
-          <p className="mt-0.5 truncate text-xs text-muted-foreground">
+          <p className="mt-0.5 truncate text-sm text-muted-foreground">
             {place.address}
           </p>
         )}
-        <div className="mt-1.5 flex items-center gap-2">
-          <span
-            className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium"
-            style={{ backgroundColor: category.tint, color: category.color }}
-          >
-            <category.icon size={11} weight="fill" />
+        <div className="mt-1 flex items-center gap-2.5 text-micro text-muted-foreground">
+          <span className="flex items-center gap-1">
+            <category.icon size={12} style={{ color: category.color }} />
             {category.label}
           </span>
           {rating !== null && (
-            <span className="flex items-center gap-0.5 text-xs font-medium text-foreground/80">
-              <Star size={12} weight="fill" className="text-amber-400" />
+            <span className="tabular flex items-center gap-0.5">
+              <Star size={11} weight="fill" className="text-star" />
               {rating}
             </span>
           )}
           {place.status === "visited" && place.visits.length > 0 && (
-            <span className="text-[11px] text-muted-foreground">
+            <span className="tabular">
               {place.visits.length}{" "}
               {place.visits.length === 1 ? "visit" : "visits"}
             </span>
@@ -75,10 +71,7 @@ export const PlaceCard = ({ place, photoUrl }: PlaceCardProps) => {
         </div>
       </div>
 
-      <CaretRight
-        size={16}
-        className={cn("shrink-0 text-muted-foreground/50")}
-      />
+      <CaretRight size={15} className="shrink-0 text-muted-foreground/60" />
     </Link>
   );
 };

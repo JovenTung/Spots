@@ -1,15 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Figtree, Fredoka } from "next/font/google";
+import { Geist } from "next/font/google";
 import { Providers } from "./providers";
 import "./globals.css";
 
-const figtree = Figtree({
+// One family across the whole app — headings, labels, data. A rounded display
+// face on data labels is what made the previous pass read as a toy.
+const geist = Geist({
   variable: "--font-sans",
-  subsets: ["latin"],
-});
-
-const fredoka = Fredoka({
-  variable: "--font-display",
   subsets: ["latin"],
 });
 
@@ -27,11 +24,15 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#F7F7F5",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f8f6f6" },
+    { media: "(prefers-color-scheme: dark)", color: "#13100f" },
+  ],
   viewportFit: "cover",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
+  // No maximumScale: pinch-zoom stays available. 16px inputs (globals.css)
+  // are what stop iOS zooming on focus.
 };
 
 export default function RootLayout({
@@ -40,7 +41,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${figtree.variable} ${fredoka.variable}`}>
+    <html lang="en" className={geist.variable}>
       <body className="min-h-dvh">
         <Providers>{children}</Providers>
       </body>

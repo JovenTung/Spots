@@ -15,7 +15,6 @@ import {
   Trash,
 } from "@phosphor-icons/react";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
 import { PageHeader } from "@/components/nav/page-header";
 import { AnimatedItem, AnimatedList } from "@/components/motion/animated-list";
 import { VisitCard } from "@/components/visits/visit-card";
@@ -111,7 +110,7 @@ export default function PlaceDetailPage({
         <PageHeader title="" />
         <div className="flex flex-col gap-4 px-5">
           <Skeleton className="aspect-[3/2] w-full rounded-lg" />
-          <Skeleton className="h-8 w-2/3 rounded-full" />
+          <Skeleton className="h-6 w-2/3 rounded-full" />
           <Skeleton className="h-4 w-1/2 rounded-full" />
         </div>
       </div>
@@ -146,7 +145,7 @@ export default function PlaceDetailPage({
             >
               <DotsThree size={24} weight="bold" />
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="rounded-2xl">
+            <DropdownMenuContent align="end">
               <DropdownMenuItem asChild className="gap-2">
                 <Link href={`/places/${place.id}/edit`}>
                   <PencilSimple size={16} />
@@ -167,10 +166,8 @@ export default function PlaceDetailPage({
 
       <div className="flex flex-col gap-5 px-5">
         {/* Hero */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="relative aspect-[3/2] w-full overflow-hidden rounded-lg shadow-sm"
+        <div
+          className="relative aspect-[3/2] w-full overflow-hidden rounded-lg border border-border"
           style={{ backgroundColor: category.tint }}
         >
           {heroUrl ? (
@@ -185,45 +182,27 @@ export default function PlaceDetailPage({
             />
           ) : (
             <div className="flex h-full items-center justify-center">
-              <category.icon
-                size={64}
-                weight="duotone"
-                style={{ color: category.color }}
-              />
+              <category.icon size={52} style={{ color: category.color }} />
             </div>
           )}
-        </motion.div>
+        </div>
 
         {/* Title block */}
         <div className="flex flex-col gap-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <span
-              className="flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium"
-              style={{ backgroundColor: category.tint, color: category.color }}
-            >
-              <category.icon size={13} weight="fill" />
+          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1.5">
+              <category.icon size={14} style={{ color: category.color }} />
               {category.label}
             </span>
-            <span
-              className={
-                place.status === "visited"
-                  ? "flex items-center gap-1 rounded-full bg-[#DFF2EE] px-2.5 py-1 text-xs font-medium text-[#2C6B5E]"
-                  : "flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-xs font-medium text-muted-foreground"
-              }
-            >
-              {place.status === "visited" ? (
-                <>
-                  <CheckCircle size={13} weight="fill" />
-                  Visited
-                </>
-              ) : (
-                "Want to go"
+            <span aria-hidden>·</span>
+            <span className="flex items-center gap-1">
+              {place.status === "visited" && (
+                <CheckCircle size={13} weight="fill" />
               )}
+              {place.status === "visited" ? "Visited" : "Want to go"}
             </span>
           </div>
-          <h2 className="font-display text-2xl font-semibold leading-tight">
-            {place.name}
-          </h2>
+          <h2 className="text-2xl font-semibold">{place.name}</h2>
           {visits && visits.length > 0 && (
             <StarRating
               value={Math.round(
@@ -235,15 +214,15 @@ export default function PlaceDetailPage({
 
         {/* Address + source links */}
         {(place.address || place.source_url) && (
-          <div className="flex flex-col overflow-hidden rounded-lg bg-card shadow-sm">
+          <div className="flex flex-col overflow-hidden rounded-lg border border-border">
             {place.address && (
               <a
                 href={`https://maps.apple.com/?q=${encodeURIComponent(place.name)}&ll=${place.lat ?? ""},${place.lng ?? ""}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 px-4 py-3.5 transition-colors active:bg-muted"
+                className="flex min-h-12 items-center gap-3 px-4 py-3 transition-colors duration-150 active:bg-muted"
               >
-                <MapPin size={20} weight="fill" className="shrink-0 text-primary" />
+                <MapPin size={18} className="shrink-0 text-muted-foreground" />
                 <span className="min-w-0 flex-1 text-sm">{place.address}</span>
               </a>
             )}
@@ -252,9 +231,9 @@ export default function PlaceDetailPage({
                 href={place.source_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 border-t border-border px-4 py-3.5 transition-colors active:bg-muted"
+                className="flex min-h-12 items-center gap-3 border-t border-border px-4 py-3 transition-colors duration-150 active:bg-muted"
               >
-                <InstagramLogo size={20} className="shrink-0 text-[#E1306C]" />
+                <InstagramLogo size={18} className="shrink-0 text-muted-foreground" />
                 <span className="text-sm">View original post</span>
               </a>
             )}
@@ -263,11 +242,7 @@ export default function PlaceDetailPage({
 
         {/* Map preview */}
         {place.lat != null && place.lng != null && (
-          <MapPreview
-            lat={place.lat}
-            lng={place.lng}
-            color={category.color}
-          />
+          <MapPreview lat={place.lat} lng={place.lng} />
         )}
 
         {/* Primary action */}
@@ -275,18 +250,18 @@ export default function PlaceDetailPage({
           <Button
             onClick={() => markVisitedMutation.mutate()}
             disabled={markVisitedMutation.isPending}
-            className="h-12 rounded-full font-display text-base"
+            size="lg" className="rounded-full"
           >
-            <CheckCircle size={20} weight="fill" />
-            {markVisitedMutation.isPending ? "One sec…" : "I've been here!"}
+            <CheckCircle size={18} weight="fill" />
+            {markVisitedMutation.isPending ? "Saving…" : "Mark as visited"}
           </Button>
         ) : (
           <Button
             asChild
-            className="h-12 rounded-full font-display text-base"
+            size="lg" className="rounded-full"
           >
             <Link href={`/places/${place.id}/add-visit`}>
-              <Plus size={20} weight="bold" />
+              <Plus size={18} weight="bold" />
               Log a visit
             </Link>
           </Button>
@@ -295,11 +270,11 @@ export default function PlaceDetailPage({
         {/* Visits */}
         {place.status === "visited" && (
           <section className="flex flex-col gap-3">
-            <h3 className="font-display text-lg font-semibold">
+            <h3 className="text-lg font-semibold">
               Visits{visits && visits.length > 0 ? ` (${visits.length})` : ""}
             </h3>
             {visits && visits.length > 0 ? (
-              <AnimatedList>
+              <AnimatedList className="gap-3">
                 {visits.map((visit) => (
                   <AnimatedItem key={visit.id}>
                     <VisitCard
@@ -310,8 +285,8 @@ export default function PlaceDetailPage({
                 ))}
               </AnimatedList>
             ) : (
-              <p className="rounded-lg bg-card px-4 py-6 text-center text-sm text-muted-foreground shadow-sm">
-                No visits logged yet — how was it?
+              <p className="rounded-lg border border-border px-4 py-6 text-center text-sm text-muted-foreground">
+                No visits logged yet. How was it?
               </p>
             )}
           </section>
@@ -320,11 +295,9 @@ export default function PlaceDetailPage({
 
       {/* Delete confirmation */}
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-        <DialogContent className="max-w-sm rounded-3xl">
+        <DialogContent className="max-w-sm">
           <DialogHeader>
-            <DialogTitle className="font-display">
-              Delete {place.name}?
-            </DialogTitle>
+            <DialogTitle>Delete {place.name}?</DialogTitle>
             <DialogDescription>
               This removes the spot, all its visits, and all photos. There is
               no undo.
@@ -333,14 +306,14 @@ export default function PlaceDetailPage({
           <DialogFooter className="flex-row gap-2">
             <Button
               variant="outline"
-              className="h-11 flex-1 rounded-full"
+              className="flex-1 rounded-full"
               onClick={() => setIsDeleteOpen(false)}
             >
               Keep it
             </Button>
             <Button
               variant="destructive"
-              className="h-11 flex-1 rounded-full"
+              className="flex-1 rounded-full"
               disabled={deleteMutation.isPending}
               onClick={() => deleteMutation.mutate()}
             >

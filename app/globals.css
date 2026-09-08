@@ -2,29 +2,115 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Tokens are OKLCH triplets (L C H) consumed as `oklch(var(--token) / <alpha>)`.
+ * Neutrals carry a 0.002-0.012 chroma toward the accent hue (40) so greys read
+ * as part of the palette rather than as dead system grey.
+ * Every foreground/background pair here was contrast-verified — see DESIGN.md.
+ */
 @layer base {
   :root {
-    /* Soft Pop palette */
-    --background: 60 11% 96%; /* #F7F7F5 */
-    --foreground: 34 8% 16%; /* #2D2A26 charcoal */
-    --card: 0 0% 100%;
-    --card-foreground: 34 8% 16%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 34 8% 16%;
-    --primary: 6 100% 68%; /* #FF6B5B coral */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 137 14% 66%; /* #9DB5A4 sage */
-    --secondary-foreground: 34 8% 16%;
-    --muted: 48 12% 92%; /* #EDECE8 */
-    --muted-foreground: 40 4% 54%;
-    --accent: 8 100% 94%; /* #FFE3DF coral-soft */
-    --accent-foreground: 7 56% 42%;
-    --destructive: 6 79% 58%; /* #E8503F */
-    --destructive-foreground: 0 0% 100%;
-    --border: 43 13% 89%; /* #E7E5E0 */
-    --input: 43 13% 89%;
-    --ring: 6 100% 68%;
-    --radius: 1.5rem;
+    color-scheme: light;
+
+    --background: 0.975 0.002 40;
+    --foreground: 0.22 0.008 40;
+    --card: 1 0 0;
+    --card-foreground: 0.22 0.008 40;
+    --popover: 1 0 0;
+    --popover-foreground: 0.22 0.008 40;
+
+    --primary: 0.585 0.185 27;
+    --primary-foreground: 1 0 0;
+    --secondary: 0.955 0.0035 40;
+    --secondary-foreground: 0.22 0.008 40;
+    --muted: 0.955 0.0035 40;
+    --muted-foreground: 0.5 0.011 40;
+    --accent: 0.945 0.027 27;
+    --accent-foreground: 0.46 0.15 27;
+    --destructive: 0.47 0.17 22;
+    --destructive-solid: 0.47 0.17 22;
+    --destructive-foreground: 1 0 0;
+
+    --border: 0.908 0.0045 40;
+    --input: 0.908 0.0045 40;
+    --ring: 0.585 0.185 27;
+    --star: 0.66 0.135 62;
+
+    /* Category hues: one lightness + chroma across the set, so no category
+       outranks another. Cafe is capped at the sRGB gamut limit for its hue. */
+    --cat-restaurant: 0.55 0.132 27;
+    --cat-cafe: 0.55 0.115 62;
+    --cat-bar: 0.55 0.132 300;
+    --cat-activity: 0.55 0.132 155;
+    --cat-sight: 0.55 0.132 245;
+    --cat-shop: 0.55 0.132 350;
+    --cat-other: 0.5 0.008 40;
+
+    --cat-restaurant-tint: 0.955 0.0035 40;
+    --cat-cafe-tint: 0.955 0.0035 40;
+    --cat-bar-tint: 0.955 0.0035 40;
+    --cat-activity-tint: 0.955 0.0035 40;
+    --cat-sight-tint: 0.955 0.0035 40;
+    --cat-shop-tint: 0.955 0.0035 40;
+    --cat-other-tint: 0.955 0.0035 40;
+
+    --radius: 0.75rem;
+
+    --shadow-sm: 0 1px 2px -1px oklch(0.22 0.008 40 / 0.08);
+    --shadow-md: 0 6px 20px -6px oklch(0.22 0.008 40 / 0.16),
+      0 2px 6px -2px oklch(0.22 0.008 40 / 0.08);
+
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+
+      --background: 0.175 0.0055 40;
+      --foreground: 0.96 0.0025 40;
+      --card: 0.215 0.0065 40;
+      --card-foreground: 0.96 0.0025 40;
+      --popover: 0.215 0.0065 40;
+      --popover-foreground: 0.96 0.0025 40;
+
+      --primary: 0.69 0.17 30;
+      --primary-foreground: 0.175 0.03 30;
+      --secondary: 0.26 0.0075 40;
+      --secondary-foreground: 0.96 0.0025 40;
+      --muted: 0.26 0.0075 40;
+      --muted-foreground: 0.705 0.0125 40;
+      --accent: 0.29 0.045 30;
+      --accent-foreground: 0.82 0.09 30;
+      --destructive: 0.72 0.14 22;
+      --destructive-solid: 0.55 0.175 22;
+      --destructive-foreground: 1 0 0;
+
+      --border: 0.3 0.0085 40;
+      --input: 0.3 0.0085 40;
+      --ring: 0.69 0.17 30;
+      --star: 0.8 0.14 80;
+
+      --cat-restaurant: 0.74 0.125 27;
+      --cat-cafe: 0.74 0.125 62;
+      --cat-bar: 0.74 0.125 300;
+      --cat-activity: 0.74 0.125 155;
+      --cat-sight: 0.74 0.125 245;
+      --cat-shop: 0.74 0.125 350;
+      --cat-other: 0.72 0.008 40;
+
+      --cat-restaurant-tint: 0.26 0.0075 40;
+      --cat-cafe-tint: 0.26 0.0075 40;
+      --cat-bar-tint: 0.26 0.0075 40;
+      --cat-activity-tint: 0.26 0.0075 40;
+      --cat-sight-tint: 0.26 0.0075 40;
+      --cat-shop-tint: 0.26 0.0075 40;
+      --cat-other-tint: 0.26 0.0075 40;
+
+      --shadow-sm: 0 1px 2px -1px oklch(0 0 0 / 0.5);
+      --shadow-md: 0 6px 20px -6px oklch(0 0 0 / 0.7),
+        0 2px 6px -2px oklch(0 0 0 / 0.4);
+    }
   }
 
   * {
@@ -37,6 +123,8 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    font-size: 0.9375rem;
+    line-height: 1.5;
   }
 
   /* iOS: inputs below 16px trigger zoom-on-focus */
@@ -44,6 +132,18 @@
   select,
   textarea {
     font-size: 16px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  /* One focus treatment across the whole app. */
+  :focus-visible {
+    outline: 2px solid oklch(var(--ring));
+    outline-offset: 2px;
   }
 }
 
@@ -63,5 +163,21 @@
 
   .scrollbar-none::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Stats and ratings must not shift width as digits change. */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

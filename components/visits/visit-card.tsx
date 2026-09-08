@@ -25,23 +25,23 @@ type VisitCardProps = {
 };
 
 export const VisitCard = ({ visit, onDelete }: VisitCardProps) => (
-  <article className="flex flex-col gap-3 rounded-lg bg-card p-4 shadow-sm">
+  <article className="flex flex-col gap-3 rounded-lg border border-border p-4">
     <div className="flex items-center justify-between gap-2">
       <div>
-        <p className="font-display text-sm font-semibold">
+        <p className="tabular text-sm font-medium text-muted-foreground">
           {formatDate(visit.visited_date)}
         </p>
-        <StarRating value={visit.rating} className="mt-1" />
+        <StarRating value={visit.rating} className="mt-1.5" />
       </div>
       {onDelete && (
         <DropdownMenu>
           <DropdownMenuTrigger
             aria-label="Visit options"
-            className="flex h-10 w-10 items-center justify-center rounded-full transition-colors active:bg-muted"
+            className="-mr-2 flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-150 active:bg-muted"
           >
             <DotsThree size={22} weight="bold" />
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="rounded-2xl">
+          <DropdownMenuContent align="end">
             <DropdownMenuItem
               onClick={onDelete}
               className="gap-2 text-destructive focus:text-destructive"
@@ -54,24 +54,29 @@ export const VisitCard = ({ visit, onDelete }: VisitCardProps) => (
       )}
     </div>
 
-    {visit.comment && (
-      <p className="text-sm leading-relaxed text-foreground/90">
-        {visit.comment}
-      </p>
-    )}
+    {visit.comment && <p className="leading-relaxed">{visit.comment}</p>}
 
-    {visit.good_things && (
-      <div className="flex items-start gap-2 rounded-2xl bg-[#DFF2EE] px-3.5 py-2.5">
-        <ThumbsUp size={16} weight="fill" className="mt-0.5 shrink-0 text-[#3E8E7E]" />
-        <p className="text-sm text-[#2C6B5E]">{visit.good_things}</p>
-      </div>
-    )}
-
-    {visit.bad_things && (
-      <div className="flex items-start gap-2 rounded-2xl bg-accent px-3.5 py-2.5">
-        <ThumbsDown size={16} weight="fill" className="mt-0.5 shrink-0 text-accent-foreground" />
-        <p className="text-sm text-accent-foreground">{visit.bad_things}</p>
-      </div>
+    {(visit.good_things || visit.bad_things) && (
+      <dl className="flex flex-col gap-2 border-t border-border pt-3">
+        {visit.good_things && (
+          <div className="flex items-start gap-2.5">
+            <dt className="mt-0.5 shrink-0">
+              <ThumbsUp size={15} className="text-muted-foreground" />
+              <span className="sr-only">What was good</span>
+            </dt>
+            <dd className="text-sm">{visit.good_things}</dd>
+          </div>
+        )}
+        {visit.bad_things && (
+          <div className="flex items-start gap-2.5">
+            <dt className="mt-0.5 shrink-0">
+              <ThumbsDown size={15} className="text-muted-foreground" />
+              <span className="sr-only">What wasn&apos;t</span>
+            </dt>
+            <dd className="text-sm">{visit.bad_things}</dd>
+          </div>
+        )}
+      </dl>
     )}
 
     <PhotoGallery photos={visit.photos} />
