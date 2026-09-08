@@ -4,6 +4,8 @@ A mobile-first places tracker, built for iPhone Safari as an add-to-home-screen 
 
 **Stack:** Next.js 16 (App Router) · TypeScript · Tailwind CSS v3 + shadcn/ui · Supabase (Postgres, Storage, Auth) · Mapbox GL + Search Box API · Claude API (caption extraction) · framer-motion · Vercel.
 
+**Design:** [PRODUCT.md](PRODUCT.md) holds the strategy (who it's for, what it should never look like); [DESIGN.md](DESIGN.md) holds the visual system — OKLCH tokens, light/dark palettes, type scale, motion rules. Read those before changing anything visual.
+
 ---
 
 ## Setup (one-time, ~15 minutes)
@@ -57,10 +59,39 @@ To test on your iPhone during development: connect to the same Wi-Fi and open `h
 
 ### 6. Deploy to Vercel
 
-1. Push this repo to GitHub and import it in Vercel.
-2. Add the same env vars (Production + Preview).
-3. Add your Vercel URL to Supabase Auth URL configuration (step 1.4).
-4. On your iPhone: open the deployed URL in Safari → Share → **Add to Home Screen**.
+**Live:** https://spots-beryl.vercel.app
+
+Already set up: the repo is linked to the Vercel project `joventungs-projects/spots`,
+all four env vars are set for Production, Preview and Development, and every push to
+`master` ships to production automatically.
+
+Two things Vercel can't do for you — do these once, or auth and the map will
+break in production:
+
+1. **Supabase → Authentication → URL Configuration**
+   - Site URL: `https://spots-beryl.vercel.app`
+   - Redirect URLs: add `https://spots-beryl.vercel.app/auth/callback`
+
+   Without this, sign-up confirmation links redirect to localhost.
+
+2. **Mapbox → your public token → URL restrictions**
+   - Add `https://spots-beryl.vercel.app` (keep `http://localhost:3000`).
+
+   The token ships in the browser bundle; URL restrictions are the only thing
+   stopping someone lifting it and billing your account.
+
+Then on your iPhone: open the URL in Safari → Share → **Add to Home Screen**.
+
+#### Redeploying
+
+Push to `master` and Vercel builds it. To deploy without a commit:
+
+```bash
+vercel deploy --prod
+```
+
+If you ever add a new `NEXT_PUBLIC_*` variable, redeploy after setting it —
+those are inlined at build time, so an existing build won't pick them up.
 
 ---
 
