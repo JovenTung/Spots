@@ -17,6 +17,7 @@ A mobile-first places tracker, built for iPhone Safari as an add-to-home-screen 
    - `supabase/migrations/0001_schema.sql` — tables, enums, indexes, RLS policies
    - `supabase/migrations/0002_storage.sql` — private `photos` bucket + storage policies
    - `supabase/migrations/0003_rate_limit.sql` — rate-limit table + RPC
+   - `supabase/migrations/0004_shared_access.sql` — `members` allowlist; switches every policy from owner-only to shared
 3. Verify: **Table Editor** shows `places`, `visits`, `photos`, `rate_limits` all with an RLS badge; **Storage** shows a private `photos` bucket.
 4. **Authentication → URL Configuration**:
    - Site URL: your production URL (use `http://localhost:3000` until you deploy)
@@ -95,6 +96,40 @@ those are inlined at build time, so an existing build won't pick them up.
 
 ---
 
+## Sharing the app with someone
+
+Spots is a **shared** space, not a per-user one. Anyone on the allowlist sees
+and can edit every spot, visit and photo; `user_id` on each row records who
+added it, for the "added by" labels, and no longer controls access.
+
+Access is an explicit allowlist, because Supabase sign-up is open by default:
+registering an account grants nothing until you add that account to `members`.
+
+**To add someone:** have them sign up in the app first, then run this in the
+Supabase SQL editor:
+
+```sql
+insert into public.members (user_id, display_name)
+select id, 'Their Name' from auth.users where email = 'them@example.com'
+on conflict (user_id) do nothing;
+```
+
+**To remove someone:**
+
+```sql
+delete from public.members where user_id = (
+  select id from auth.users where email = 'them@example.com'
+);
+```
+
+There are deliberately no insert/update/delete RLS policies on `members`, so
+the allowlist can only be changed from the SQL editor or the dashboard — never
+from a browser session.
+
+Worth doing once you're both registered: **Authentication → Sign In / Providers
+→ Email → disable "Allow new users to sign up"**. The allowlist already blocks
+strangers from seeing anything; this stops them creating accounts at all.
+
 ## How the Instagram import works (honest version)
 
 1. **Paste a post link** → the server tries Meta's oEmbed API (only if `META_OEMBED_TOKEN` is set) and then the post page's `og:` meta tags. Both are best-effort — Instagram usually login-walls anonymous datacenter requests.
@@ -105,14 +140,14 @@ Imports are rate-limited to 10/hour per account.
 
 ## Security model
 
-- **RLS everywhere** — every table and the storage bucket enforce owner-only access at the database level; the app never uses the Supabase service-role key (it doesn't exist in this codebase at all).
+- **RLS everywhere** — every table and the storage bucket enforce access at the database level via the `members` allowlist (see *Sharing the app with someone*); the app never uses the Supabase service-role key (it doesn't exist in this codebase at all). Membership is checked through a `SECURITY DEFINER` function with a pinned `search_path`, so policies can't recurse.
 - Every server action and API route re-checks auth (`getUser()`) and validates input with Zod.
 - Photo uploads are magic-byte sniffed server-side (JPEG/PNG/WebP only, 10MB cap; the client compresses to ~1MB before upload) and stored in a private bucket under `{user_id}/…` with signed, expiring URLs.
 - The Instagram fetch only ever requests an exact-host `instagram.com` post URL rebuilt from validated parts, with redirects disabled and a capped response read (SSRF-hardened).
 - Rate limiting is backed by a Postgres table + `SECURITY DEFINER` RPC with an action allowlist and bounded windows — the table itself is unreachable from clients.
 - The Next.js image optimizer is pinned to this project's Supabase storage path only; Instagram thumbnails render unoptimized so `/_next/image` can't be used as an unauthenticated fetch relay.
 
-**Verify RLS yourself** (recommended once): create a second account, sign in with it, and confirm it sees none of the first account's places — both in the app and via the Supabase REST API with that user's JWT.
+**Verify RLS yourself** (recommended once): create a third account, sign in with it, and confirm it sees *nothing* — no places, no photos — because it isn't on the allowlist. Then add it to `members` and confirm everything appears.
 
 ## Known limitations
 

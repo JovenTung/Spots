@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { StarRating } from "@/components/visits/star-rating";
 import { PhotoGallery } from "@/components/visits/photo-gallery";
+import { AddedBy } from "@/components/places/added-by";
 import type { VisitWithPhotos } from "@/lib/queries/visits";
 
 const formatDate = (isoDate: string) =>
@@ -28,8 +29,9 @@ export const VisitCard = ({ visit, onDelete }: VisitCardProps) => (
   <article className="flex flex-col gap-3 rounded-lg border border-border p-4">
     <div className="flex items-center justify-between gap-2">
       <div>
-        <p className="tabular text-sm font-medium text-muted-foreground">
+        <p className="tabular flex flex-wrap items-center gap-x-1.5 text-sm font-medium text-muted-foreground">
           {formatDate(visit.visited_date)}
+          <AddedBy userId={visit.user_id} verb="Logged" />
         </p>
         <StarRating value={visit.rating} className="mt-1.5" />
       </div>

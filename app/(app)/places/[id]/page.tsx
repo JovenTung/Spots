@@ -20,6 +20,7 @@ import { AnimatedItem, AnimatedList } from "@/components/motion/animated-list";
 import { VisitCard } from "@/components/visits/visit-card";
 import { StarRating } from "@/components/visits/star-rating";
 import { MapPreview } from "@/components/map/map-preview";
+import { AddedBy } from "@/components/places/added-by";
 import {
   Dialog,
   DialogContent,
@@ -201,6 +202,7 @@ export default function PlaceDetailPage({
               )}
               {place.status === "visited" ? "Visited" : "Want to go"}
             </span>
+            <AddedBy userId={place.user_id} />
           </div>
           <h2 className="text-2xl font-semibold">{place.name}</h2>
           {visits && visits.length > 0 && (

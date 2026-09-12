@@ -52,7 +52,6 @@ export const updatePlace = async (
     .from("places")
     .update(values)
     .eq("id", id)
-    .eq("user_id", user.id)
     .select()
     .single();
 
@@ -75,8 +74,7 @@ export const markVisited = async (input: {
   const { error } = await supabase
     .from("places")
     .update({ status: "visited" })
-    .eq("id", parsed.data.id)
-    .eq("user_id", user.id);
+    .eq("id", parsed.data.id);
 
   if (error) return { ok: false, error: "Couldn't update this spot" };
   return { ok: true, data: undefined };
@@ -104,8 +102,7 @@ export const deletePlace = async (input: {
   const { error } = await supabase
     .from("places")
     .delete()
-    .eq("id", parsed.data.id)
-    .eq("user_id", user.id);
+    .eq("id", parsed.data.id);
 
   if (error) return { ok: false, error: "Couldn't delete this spot" };
 

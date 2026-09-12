@@ -53,3 +53,9 @@ export type PhotoRow = {
 export type PlaceWithVisitStats = PlaceRow & {
   visits: Pick<VisitRow, "rating">[];
 };
+
+export type MemberRow = {
+  user_id: string;
+  display_name: string | null;
+  added_at: string;
+};

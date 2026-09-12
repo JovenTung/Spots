@@ -29,13 +29,12 @@ export const createVisit = async (
     };
   }
 
-  // RLS's with-check also blocks visits on places the user doesn't own,
+  // RLS's with-check also blocks visits on places outside the shared space,
   // but verify explicitly for a clean error message.
   const { data: place } = await supabase
     .from("places")
     .select("id")
     .eq("id", parsed.data.place_id)
-    .eq("user_id", user.id)
     .maybeSingle();
   if (!place) return { ok: false, error: "Place not found" };
 
@@ -70,8 +69,7 @@ export const deleteVisit = async (input: {
   const { error } = await supabase
     .from("visits")
     .delete()
-    .eq("id", parsed.data.id)
-    .eq("user_id", user.id);
+    .eq("id", parsed.data.id);
 
   if (error) return { ok: false, error: "Couldn't delete this visit" };
 

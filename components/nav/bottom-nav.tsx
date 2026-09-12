@@ -12,9 +12,14 @@ const NAV_ITEMS = [
   { href: "/profile", label: "Profile", icon: User },
 ] as const;
 
+/**
+ * Four equal columns: three destinations plus the add action. Every item has
+ * the same icon-row height and label, so the row aligns on one baseline.
+ * (A floating centre button can't actually sit at the bar's centre with an
+ * even number of items — it lands in slot 3 of 4 and reads as misplaced.)
+ */
 export const BottomNav = () => {
   const pathname = usePathname();
-  const reduceMotion = useReducedMotion();
 
   const isActive = (href: string) =>
     href === "/places"
@@ -23,31 +28,18 @@ export const BottomNav = () => {
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-nav border-t border-border bg-card/85 pb-safe backdrop-blur-xl">
-      <div className="mx-auto flex h-16 w-full max-w-md items-center justify-around px-2">
-        {NAV_ITEMS.slice(0, 2).map((item) => (
-          <NavLink key={item.href} {...item} active={isActive(item.href)} />
-        ))}
-
-        <Link
-          href="/places/new"
-          aria-label="Add a spot"
-          className="flex h-12 w-12 items-center justify-center"
-        >
-          <motion.span
-            whileTap={reduceMotion ? undefined : { scale: 0.92 }}
-            className="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-foreground"
-          >
-            <Plus size={22} weight="bold" />
-          </motion.span>
-        </Link>
-
-        {NAV_ITEMS.slice(2).map((item) => (
-          <NavLink key={item.href} {...item} active={isActive(item.href)} />
-        ))}
+      <div className="mx-auto grid h-16 w-full max-w-md grid-cols-4 items-center px-1">
+        <NavLink {...NAV_ITEMS[0]} active={isActive(NAV_ITEMS[0].href)} />
+        <NavLink {...NAV_ITEMS[1]} active={isActive(NAV_ITEMS[1].href)} />
+        <AddLink active={pathname === "/places/new"} />
+        <NavLink {...NAV_ITEMS[2]} active={isActive(NAV_ITEMS[2].href)} />
       </div>
     </nav>
   );
 };
+
+const itemClass =
+  "flex min-h-11 flex-col items-center justify-center gap-1 rounded-md transition-colors duration-150";
 
 const NavLink = ({
   href,
@@ -63,12 +55,31 @@ const NavLink = ({
   <Link
     href={href}
     aria-current={active ? "page" : undefined}
-    className={cn(
-      "flex min-h-11 min-w-16 flex-col items-center justify-center gap-1 rounded-md transition-colors duration-150",
-      active ? "text-foreground" : "text-muted-foreground",
-    )}
+    className={cn(itemClass, active ? "text-foreground" : "text-muted-foreground")}
   >
-    <Icon size={22} weight={active ? "fill" : "regular"} />
+    <span className="flex h-8 items-center">
+      <Icon size={22} weight={active ? "fill" : "regular"} />
+    </span>
     <span className="text-micro font-medium">{label}</span>
   </Link>
 );
+
+const AddLink = ({ active }: { active: boolean }) => {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <Link
+      href="/places/new"
+      aria-current={active ? "page" : undefined}
+      className={cn(itemClass, active ? "text-foreground" : "text-muted-foreground")}
+    >
+      <motion.span
+        whileTap={reduceMotion ? undefined : { scale: 0.92 }}
+        className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground"
+      >
+        <Plus size={18} weight="bold" />
+      </motion.span>
+      <span className="text-micro font-medium">Add</span>
+    </Link>
+  );
+};
